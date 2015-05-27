@@ -73,6 +73,12 @@ function Client(prefix, timeout) {
     this.requestEvent = prefix + "request";
 
     this.timeout = timeout ? timeout : 1000 * 5;
+    var self = this;
+    this.idGenerator = idGenerator ? idGenerator : function() {
+      self.id++;
+      self.id %= 1000;
+      return self.id;
+    };
 }
 
 Client.prototype = {
@@ -97,6 +103,7 @@ Client.prototype = {
         if(!meta) { meta = {}; }
 
         var frame = typeof meta == "object" ? meta : {};
+        this.id = this.idGenerator();
         frame.i = this.id;
         frame.m = method;
         frame.b = body;
